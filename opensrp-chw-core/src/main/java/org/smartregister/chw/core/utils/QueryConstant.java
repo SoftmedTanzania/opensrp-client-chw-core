@@ -106,7 +106,7 @@ public interface QueryConstant {
             "    FROM ec_anc_register\n" +
             "    UNION ALL\n" +
             "    SELECT ec_pregnancy_outcome.base_entity_id AS base_entity_id\n" +
-            "    FROM ec_pregnancy_outcome\n" +
+            "    FROM ec_pregnancy_outcome where ec_pregnancy_outcome.delivery_date is not null\n" +
             "    UNION ALL\n" +
             "    SELECT ec_child.base_entity_id AS base_entity_id\n" +
             "    FROM ec_child\n" +
