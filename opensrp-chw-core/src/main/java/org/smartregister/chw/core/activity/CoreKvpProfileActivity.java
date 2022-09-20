@@ -20,6 +20,7 @@ public class CoreKvpProfileActivity extends BaseKvpProfileActivity {
 
     @Override
     public void refreshFamilyStatus(AlertStatus status) {
+        super.refreshFamilyStatus(status);
         rlFamilyServicesDue.setVisibility(View.GONE);
     }
 
