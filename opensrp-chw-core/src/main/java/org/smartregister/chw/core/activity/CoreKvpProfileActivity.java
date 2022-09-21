@@ -1,5 +1,6 @@
 package org.smartregister.chw.core.activity;
 
+import android.view.Menu;
 import android.view.View;
 
 import org.smartregister.chw.kvp.activity.BaseKvpProfileActivity;
@@ -27,5 +28,11 @@ public class CoreKvpProfileActivity extends BaseKvpProfileActivity {
     @Override
     public void refreshUpComingServicesStatus(String service, AlertStatus status, Date date) {
         rlUpcomingServices.setVisibility(View.GONE);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //TODO: enable the options menu after figuring out what needs to show up
+        return false;
     }
 }
