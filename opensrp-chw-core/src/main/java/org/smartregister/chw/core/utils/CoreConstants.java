@@ -928,6 +928,8 @@ public class CoreConstants {
         public static final String CDP = "Condom Programming";
         public static final String HIV_SELF_TESTING = "Self Testing";
         public static final String KVP_PrEP = "KVP/PrEP";
+        public static final String KVP = "KVP";
+        public static final String PrEP = "PrEP";
     }
 
     public static final class RULE_FILE {
@@ -1179,6 +1181,8 @@ public class CoreConstants {
         public static final String HIV_SELF_TESTING_REGISTER_ACTIVITY = "HIV_SELF_TESTING_REGISTER_ACTIVITY";
         public static final String CDP_REGISTER_ACTIVITY = "CDP_REGISTER_ACTIVITY";
         public static final String KVP_PrEP_REGISTER_ACTIVITY = "KVP_PrEP_REGISTER_ACTIVITY";
+        public static final String KVP_REGISTER_ACTIVITY ="KVP_REGISTER_ACTIVITY";
+        public static final String PrEP_REGISTER_ACTIVITY ="PrEP_REGISTER_ACTIVITY";
     }
 
     public static final class BUSINESS_STATUS {
