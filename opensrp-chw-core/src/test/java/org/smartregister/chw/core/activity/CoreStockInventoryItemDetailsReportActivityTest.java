@@ -27,7 +27,7 @@ import org.smartregister.chw.core.utils.CoreConstants;
 
 
 @RunWith(RobolectricTestRunner.class)
-public class CoreStockInventoryItemDetailsReportActivityTest extends BaseUnitTest {
+public class  CoreStockInventoryItemDetailsReportActivityTest extends BaseUnitTest {
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
     @Mock
@@ -48,12 +48,13 @@ public class CoreStockInventoryItemDetailsReportActivityTest extends BaseUnitTes
         CoreLibrary.init(context);
 
         //Auto login by default
-        //String password = "pwd";
+        String password = "pwd";
         context.session().start(context.session().lengthInMilliseconds());
-        //context.configuration().getDrishtiApplication().setPassword(password);
-        //context.session().setPassword(password);
+        context.configuration().getDrishtiApplication().setPassword(password.getBytes());
+        context.session().setPassword(password.getBytes());
 
         String stockItemName = "Male Condoms";
+
         String providerName = "All-CHWs";
         Intent intent = new Intent();
         intent.putExtra(CoreConstants.HfStockUsageUtil.STOCK_NAME, stockItemName);
@@ -86,5 +87,6 @@ public class CoreStockInventoryItemDetailsReportActivityTest extends BaseUnitTes
             e.printStackTrace();
         }
     }
+
 
 }

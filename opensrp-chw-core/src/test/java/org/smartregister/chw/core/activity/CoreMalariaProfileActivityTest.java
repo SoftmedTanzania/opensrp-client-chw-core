@@ -33,7 +33,7 @@ import org.smartregister.chw.core.activity.impl.CoreMalariaProfileActivityImpl;
 import org.smartregister.chw.core.activity.impl.FamilyOtherMemberActivityPresenterImpl;
 import org.smartregister.chw.core.presenter.CoreFamilyOtherMemberActivityPresenter;
 import org.smartregister.chw.core.presenter.CoreMalariaMemberProfilePresenter;
-import org.smartregister.chw.core.shadows.UtilsShadowUtil;
+import org.smartregister.chw.core.shadows.FamilyUtilsShadowUtil;
 import org.smartregister.chw.core.utils.CoreConstants;
 import org.smartregister.chw.malaria.domain.MemberObject;
 import org.smartregister.chw.malaria.presenter.BaseMalariaProfilePresenter;
@@ -44,7 +44,7 @@ import org.smartregister.family.util.JsonFormUtils;
 import timber.log.Timber;
 
 
-@Config(shadows = {UtilsShadowUtil.class})
+@Config(shadows = {FamilyUtilsShadowUtil.class})
 public class CoreMalariaProfileActivityTest extends BaseUnitTest {
 
     @Rule
@@ -121,7 +121,7 @@ public class CoreMalariaProfileActivityTest extends BaseUnitTest {
                 "config",
                 "familyRelationKey");
 
-        UtilsShadowUtil.setMetadata(metadata);
+        FamilyUtilsShadowUtil.setMetadata(metadata);
 
         CoreFamilyOtherMemberActivityPresenter memberActivityPresenter = Mockito.spy(Mockito.mock(FamilyOtherMemberActivityPresenterImpl.class));
         Mockito.when(activity.presenter()).thenReturn(memberActivityPresenter);
@@ -149,6 +149,14 @@ public class CoreMalariaProfileActivityTest extends BaseUnitTest {
     public void optionIsHandledOnOptionsItemSelected() {
         activity = Mockito.spy(activity);
         MenuItem menuItem = Mockito.mock(MenuItem.class);
+
+        Mockito.doReturn(android.R.id.home).when(menuItem).getItemId();
+        activity.onOptionsItemSelected(menuItem);
+        Mockito.verify(activity).onBackPressed();
+
+        Mockito.doReturn(R.id.action_remove_member).when(menuItem).getItemId();
+        activity.onOptionsItemSelected(menuItem);
+        Mockito.verify(activity).removeMember();
 
         Mockito.doNothing().when(activity).startFormForEdit(R.string.registration_info,
                 CoreConstants.JSON_FORM.FAMILY_MEMBER_REGISTER);
