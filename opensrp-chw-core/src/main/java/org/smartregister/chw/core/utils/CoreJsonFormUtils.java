@@ -892,7 +892,7 @@ public class CoreJsonFormUtils extends org.smartregister.family.util.JsonFormUti
             Event event;
             if (formName.equalsIgnoreCase(CoreConstants.JSON_FORM.PARTNER_TESTING)) {
                 event = getEditAncPartnerTesting(baseEntityID);
-            } else if (formName.equalsIgnoreCase(org.smartregister.chw.cdp.util.Constants.FORMS.CDP_OUTLET_REGISTRATION)) {
+            } else if (formName.equalsIgnoreCase(org.smartregister.chw.cdp.util.Constants.FORMS.EDIT_CDP_OUTLET)) {
                 event = getEditOutletRegistration(baseEntityID);
             } else if (formName.equalsIgnoreCase(CoreConstants.JSON_FORM.ANC_PREGNANCY_CONFIRMATION) || formName.equalsIgnoreCase(CoreConstants.JSON_FORM.ANC_TRANSFER_IN_REGISTRATION)) {
                 event = getEditAncRegistration(baseEntityID, eventType);

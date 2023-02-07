@@ -442,8 +442,7 @@ public class CoreClientProcessor extends ClientProcessorForJava {
     }
 
     private void clientProcessHfInAppReportingEvent(Event event) {
-        if (processHfReportEvents())
-            clientProcessInAppReportingEvent(event);
+        if (processHfReportEvents()) clientProcessInAppReportingEvent(event);
     }
 
     private void clientProcessStockEvent(Event event) {
@@ -631,6 +630,40 @@ public class CoreClientProcessor extends ClientProcessorForJava {
             CdpStockingDao.updateStockCountData(locationId, event.getFormSubmissionId(), chwName, maleCondomsOffset, femaleCondomsOffset, stockEventType, restockDate);
 
 
+            completeProcessing(event);
+            CdpLibrary.getInstance().context().getEventClientRepository().markEventAsProcessed(event.getFormSubmissionId());
+
+            if (event.getEventType().equals(org.smartregister.chw.cdp.util.Constants.EVENT_TYPE.CDP_RESTOCK)) {
+                processCDPOutletStockChanges(event);
+            }
+        }
+    }
+
+    private void processCDPOutletStockChanges(Event event) {
+        List<Obs> visitObs = event.getObs();
+        String maleCondomsOffset = "0";
+        String femaleCondomsOffset = "0";
+        String restockDate = "";
+        String baseEntityId = event.getBaseEntityId();
+        String stockEventType = "";
+
+        if (visitObs.size() > 0) {
+            for (Obs obs : visitObs) {
+                if (org.smartregister.chw.cdp.util.Constants.JSON_FORM_KEY.FEMALE_CONDOMS_OFFSET.equals(obs.getFieldCode())) {
+                    femaleCondomsOffset = (String) obs.getValue();
+                } else if (org.smartregister.chw.cdp.util.Constants.JSON_FORM_KEY.MALE_CONDOMS_OFFSET.equals(obs.getFieldCode())) {
+                    maleCondomsOffset = (String) obs.getValue();
+                } else if (org.smartregister.chw.cdp.util.Constants.JSON_FORM_KEY.CONDOM_RESTOCK_DATE.equals(obs.getFieldCode())) {
+                    restockDate = (String) obs.getValue();
+                } else if (org.smartregister.chw.cdp.util.Constants.JSON_FORM_KEY.STOCK_EVENT_TYPE.equals(obs.getFieldCode())) {
+                    stockEventType = (String) obs.getValue();
+                    if (stockEventType.equals(org.smartregister.chw.cdp.util.Constants.STOCK_EVENT_TYPES.DECREMENT))
+                        stockEventType = org.smartregister.chw.cdp.util.Constants.STOCK_EVENT_TYPES.INCREMENT;
+                    else
+                        stockEventType = org.smartregister.chw.cdp.util.Constants.STOCK_EVENT_TYPES.DECREMENT;
+                }
+            }
+            CdpStockingDao.updateOutletStockCountData(baseEntityId, event.getFormSubmissionId(), maleCondomsOffset, femaleCondomsOffset, stockEventType, restockDate);
             completeProcessing(event);
             CdpLibrary.getInstance().context().getEventClientRepository().markEventAsProcessed(event.getFormSubmissionId());
         }
@@ -838,24 +871,18 @@ public class CoreClientProcessor extends ClientProcessorForJava {
             values.put(DBConstants.KEY.DATE_REMOVED, new SimpleDateFormat("yyyy-MM-dd").format(myEventDate));
             values.put("is_closed", 1);
 
-            CoreChwApplication.getInstance().getRepository().getWritableDatabase().update(CoreConstants.TABLE_NAME.FAMILY, values,
-                    DBConstants.KEY.BASE_ENTITY_ID + " = ?  ", new String[]{familyID});
+            CoreChwApplication.getInstance().getRepository().getWritableDatabase().update(CoreConstants.TABLE_NAME.FAMILY, values, DBConstants.KEY.BASE_ENTITY_ID + " = ?  ", new String[]{familyID});
 
-            CoreChwApplication.getInstance().getRepository().getWritableDatabase().update(CoreConstants.TABLE_NAME.CHILD, values,
-                    DBConstants.KEY.RELATIONAL_ID + " = ?  ", new String[]{familyID});
+            CoreChwApplication.getInstance().getRepository().getWritableDatabase().update(CoreConstants.TABLE_NAME.CHILD, values, DBConstants.KEY.RELATIONAL_ID + " = ?  ", new String[]{familyID});
 
-            CoreChwApplication.getInstance().getRepository().getWritableDatabase().update(CoreConstants.TABLE_NAME.FAMILY_MEMBER, values,
-                    DBConstants.KEY.RELATIONAL_ID + " = ?  ", new String[]{familyID});
+            CoreChwApplication.getInstance().getRepository().getWritableDatabase().update(CoreConstants.TABLE_NAME.FAMILY_MEMBER, values, DBConstants.KEY.RELATIONAL_ID + " = ?  ", new String[]{familyID});
 
             // clean fts table
-            CoreChwApplication.getInstance().getRepository().getWritableDatabase().update(CommonFtsObject.searchTableName(CoreConstants.TABLE_NAME.FAMILY), values,
-                    CommonFtsObject.idColumn + " = ?  ", new String[]{familyID});
+            CoreChwApplication.getInstance().getRepository().getWritableDatabase().update(CommonFtsObject.searchTableName(CoreConstants.TABLE_NAME.FAMILY), values, CommonFtsObject.idColumn + " = ?  ", new String[]{familyID});
 
-            CoreChwApplication.getInstance().getRepository().getWritableDatabase().update(CommonFtsObject.searchTableName(CoreConstants.TABLE_NAME.CHILD), values,
-                    String.format(" %s in (select base_entity_id from %s where relational_id = ? )  ", CommonFtsObject.idColumn, CoreConstants.TABLE_NAME.CHILD), new String[]{familyID});
+            CoreChwApplication.getInstance().getRepository().getWritableDatabase().update(CommonFtsObject.searchTableName(CoreConstants.TABLE_NAME.CHILD), values, String.format(" %s in (select base_entity_id from %s where relational_id = ? )  ", CommonFtsObject.idColumn, CoreConstants.TABLE_NAME.CHILD), new String[]{familyID});
 
-            CoreChwApplication.getInstance().getRepository().getWritableDatabase().update(CommonFtsObject.searchTableName(CoreConstants.TABLE_NAME.FAMILY_MEMBER), values,
-                    String.format(" %s in (select base_entity_id from %s where relational_id = ? )  ", CommonFtsObject.idColumn, CoreConstants.TABLE_NAME.FAMILY_MEMBER), new String[]{familyID});
+            CoreChwApplication.getInstance().getRepository().getWritableDatabase().update(CommonFtsObject.searchTableName(CoreConstants.TABLE_NAME.FAMILY_MEMBER), values, String.format(" %s in (select base_entity_id from %s where relational_id = ? )  ", CommonFtsObject.idColumn, CoreConstants.TABLE_NAME.FAMILY_MEMBER), new String[]{familyID});
 
             List<String> familyMembers = ChildDao.getFamilyMembers(familyID);
             for (String baseEntityId : familyMembers) {
@@ -911,20 +938,17 @@ public class CoreClientProcessor extends ClientProcessorForJava {
             values.put("is_closed", 1);
 
             // clean fts table
-            getWritableDatabase().update(CommonFtsObject.searchTableName(CoreConstants.TABLE_NAME.FAMILY_MEMBER), values,
-                    " object_id  = ?  ", new String[]{baseEntityId});
+            getWritableDatabase().update(CommonFtsObject.searchTableName(CoreConstants.TABLE_NAME.FAMILY_MEMBER), values, " object_id  = ?  ", new String[]{baseEntityId});
 
 
             try {
                 Date dod = getDate(obsMap, "date_died");
-                if (dod != null)
-                    values.put(DBConstants.KEY.DOD, defaultDf.format(dod));
+                if (dod != null) values.put(DBConstants.KEY.DOD, defaultDf.format(dod));
             } catch (ParseException e) {
                 Timber.e(e);
             }
 
-            getWritableDatabase().update(CoreConstants.TABLE_NAME.FAMILY_MEMBER, values,
-                    DBConstants.KEY.BASE_ENTITY_ID + " = ?  ", new String[]{baseEntityId});
+            getWritableDatabase().update(CoreConstants.TABLE_NAME.FAMILY_MEMBER, values, DBConstants.KEY.BASE_ENTITY_ID + " = ?  ", new String[]{baseEntityId});
 
             // Utils.context().commonrepository(CoreConstants.TABLE_NAME.FAMILY_MEMBER).populateSearchValues(baseEntityId, DBConstants.KEY.DATE_REMOVED, new SimpleDateFormat("yyyy-MM-dd").format(eventDate), null);
             //CoreChwApplication.getInstance().getContext().alertService().deleteOfflineAlerts(baseEntityId);
@@ -953,19 +977,16 @@ public class CoreClientProcessor extends ClientProcessorForJava {
             values.put("is_closed", 1);
 
             // clean fts table
-            getWritableDatabase().update(CommonFtsObject.searchTableName(CoreConstants.TABLE_NAME.CHILD), values,
-                    CommonFtsObject.idColumn + "  = ?  ", new String[]{baseEntityId});
+            getWritableDatabase().update(CommonFtsObject.searchTableName(CoreConstants.TABLE_NAME.CHILD), values, CommonFtsObject.idColumn + "  = ?  ", new String[]{baseEntityId});
 
             try {
                 Date dod = getDate(obsMap, "date_died");
-                if (dod != null)
-                    values.put(DBConstants.KEY.DOD, defaultDf.format(dod));
+                if (dod != null) values.put(DBConstants.KEY.DOD, defaultDf.format(dod));
             } catch (ParseException e) {
                 Timber.e(e);
             }
 
-            getWritableDatabase().update(CoreConstants.TABLE_NAME.CHILD, values,
-                    DBConstants.KEY.BASE_ENTITY_ID + " = ?  ", new String[]{baseEntityId});
+            getWritableDatabase().update(CoreConstants.TABLE_NAME.CHILD, values, DBConstants.KEY.BASE_ENTITY_ID + " = ?  ", new String[]{baseEntityId});
 
             // Utils.context().commonrepository(CoreConstants.TABLE_NAME.CHILD).populateSearchValues(baseEntityId, DBConstants.KEY.DATE_REMOVED, new SimpleDateFormat("yyyy-MM-dd").format(eventDate), null);
             //CoreChwApplication.getInstance().getContext().alertService().deleteOfflineAlerts(baseEntityId);
@@ -1050,15 +1071,13 @@ public class CoreClientProcessor extends ClientProcessorForJava {
                 if (StringUtils.isNotBlank(value)) {
                     communityResponderModel.setResponderName(value);
                     continue;
-                } else
-                    return null;
+                } else return null;
             } else if (obs.getFormSubmissionField().equals(CoreConstants.JsonAssets.RESPONDER_PHONE_NUMBER)) {
                 String value = StockUsageReportUtils.getObsValue(obs);
                 if (StringUtils.isNotBlank(value)) {
                     communityResponderModel.setResponderPhoneNumber(value);
                     continue;
-                } else
-                    return null;
+                } else return null;
             } else if (obs.getFormSubmissionField().equals(CoreConstants.JsonAssets.RESPONDER_ID)) {
                 String value = StockUsageReportUtils.getObsValue(obs);
                 if (StringUtils.isNotBlank(value)) {
@@ -1072,8 +1091,7 @@ public class CoreClientProcessor extends ClientProcessorForJava {
                 if (StringUtils.isNotBlank(value)) {
                     communityResponderModel.setResponderLocation(value);
                     continue;
-                } else
-                    return null;
+                } else return null;
             }
         }
         return communityResponderModel;
