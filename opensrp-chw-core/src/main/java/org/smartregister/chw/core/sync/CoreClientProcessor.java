@@ -602,7 +602,8 @@ public class CoreClientProcessor extends ClientProcessorForJava {
         String maleCondomsOffset = "0";
         String femaleCondomsOffset = "0";
         String restockDate = "";
-        String condomBrand = "";
+        String maleCondomBrand = "";
+        String femaleCondomBrand = "";
         String locationId = event.getLocationId();
         String chwName = event.getProviderId();
         String stockEventType = "";
@@ -620,13 +621,15 @@ public class CoreClientProcessor extends ClientProcessorForJava {
                     stockEventType = (String) obs.getValue();
                 } else if (org.smartregister.chw.cdp.util.Constants.JSON_FORM_KEY.ISSUING_ORGANIZATION.equals(obs.getFieldCode())) {
                     issuingOrganization = (String) obs.getValue();
-                } else if (obs.getFieldCode().contains(org.smartregister.chw.cdp.util.Constants.JSON_FORM_KEY.CONDOM_BRAND)) {
-                    condomBrand = (String) obs.getValue();
+                } else if (obs.getFieldCode().equals(org.smartregister.chw.cdp.util.Constants.JSON_FORM_KEY.MALE_CONDOM_BRAND)) {
+                    maleCondomBrand = (String) obs.getValue();
+                } else if (obs.getFieldCode().equals(org.smartregister.chw.cdp.util.Constants.JSON_FORM_KEY.FEMALE_CONDOM_BRAND)) {
+                    femaleCondomBrand = (String) obs.getValue();
                 }
             }
 
 
-            CdpStockingDao.updateStockLogData(locationId, event.getFormSubmissionId(), chwName, condomBrand, maleCondomsOffset, femaleCondomsOffset, stockEventType, issuingOrganization, event.getEventType(), restockDate);
+            CdpStockingDao.updateStockLogData(locationId, event.getFormSubmissionId(), chwName, maleCondomBrand, femaleCondomBrand, maleCondomsOffset, femaleCondomsOffset, stockEventType, issuingOrganization, event.getEventType(), restockDate);
             CdpStockingDao.updateStockCountData(locationId, event.getFormSubmissionId(), chwName, maleCondomsOffset, femaleCondomsOffset, stockEventType, restockDate);
 
 
