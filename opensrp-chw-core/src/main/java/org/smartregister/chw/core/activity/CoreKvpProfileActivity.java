@@ -35,7 +35,7 @@ import timber.log.Timber;
 /**
  * Created by Billy on 20/09/2022.
  */
-public class CoreKvpProfileActivity extends BaseKvpProfileActivity {
+public abstract class CoreKvpProfileActivity extends BaseKvpProfileActivity {
     //TODO: implement startFormActivity, to load followup forms
 
     @Override
@@ -56,7 +56,7 @@ public class CoreKvpProfileActivity extends BaseKvpProfileActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.hiv_profile_menu, menu);
+        getMenuInflater().inflate(R.menu.kvp_profile_menu, menu);
         menu.findItem(R.id.action_location_info).setVisible(UpdateDetailsUtil.isIndependentClient(memberObject.getBaseEntityId()));
         return true;
     }
@@ -83,6 +83,9 @@ public class CoreKvpProfileActivity extends BaseKvpProfileActivity {
                     UpdateDetailsUtil.getFamilyRegistrationDetails(memberObject.getFamilyBaseEntityId()), Utils.metadata().familyRegister.updateEventType);
             if (preFilledForm != null)
                 UpdateDetailsUtil.startUpdateClientDetailsActivity(preFilledForm, this);
+            return true;
+        } else if (itemId == R.id.action_hivst_registration) {
+            startHivstRegistration();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -138,5 +141,7 @@ public class CoreKvpProfileActivity extends BaseKvpProfileActivity {
         Intent intent = org.smartregister.chw.core.utils.Utils.formActivityIntent(this, jsonForm.toString());
         startActivityForResult(intent, JsonFormUtils.REQUEST_CODE_GET_JSON);
     }
+
+    public abstract void startHivstRegistration();
 
 }
