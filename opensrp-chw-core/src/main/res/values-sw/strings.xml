@@ -805,5 +805,11 @@
     <string name="gbv_registration">Usajili wa Ukatili wa kijisia na ukatili dhidi ya Watoto</string>
     <string name="vac_registration">Usajili wa Ukatili dhidi ya Watoto</string>
 
+    <!--   CECAP -->
+    <string name="reproductive_cancer_preventive_services_registration">Usajili wa Huduma za Saratani ya Via vya Uzazi</string>
+
+    <!--   ASRH -->
+    <string name="asrh_registration">Usajili wa Huduma za Afya ya Uzazi  kwa Vijana</string>
+
 </resources>
 

@@ -961,6 +961,10 @@ public class CoreConstants {
 
         public static final String GBV = "GBV";
 
+        public static final String CECAP = "CECAP";
+
+        public static final String ASRH = "ASRH";
+
         public static final String SBC_MONTHLY_SOCIAL_MEDIA_REPORT = "SBC MONTHLY SOCIAL MEDIA REPORT";
     }
 
@@ -1224,6 +1228,10 @@ public class CoreConstants {
         public static final String SBC_MONTHLY_SOCIAL_MEDIA_REGISTER_ACTIVITY = "SBC_MONTHLY_SOCIAL_MEDIA_REPORT_REGISTER_ACTIVITY";
 
         public static final String GBV_REGISTER_ACTIVITY = "GBV_REGISTER_ACTIVITY";
+
+        public static final String CECAP_REGISTER_ACTIVITY = "CECAP_REGISTER_ACTIVITY";
+
+        public static final String ASRH_REGISTER_ACTIVITY = "ASRH_REGISTER_ACTIVITY";
     }
 
     public static final class BUSINESS_STATUS {
@@ -1251,10 +1259,14 @@ public class CoreConstants {
         public static final String LTFU = "LTFU";
         public static final String LTFU_FEEDBACK = "LTFU Community Followup Feedback";
         public static final String KVP_FRIENDLY_SERVICES = "Huduma rafiki kwa makundi maalum";
+
         public static final String STI_REFERRAL = "STI Services";
+
         public static final String VMMC = "VMMC";
 
         public static final String ICCM_REFERRAL = "ICCM Services";
+
+        public static final String CECAP_REFERRAL = "CECAP Services";
     }
 
     public static final class REGISTER_TYPE {

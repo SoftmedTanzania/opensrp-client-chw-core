@@ -575,6 +575,18 @@ public class NavigationInteractor implements NavigationContract.Interactor {
                                 "   from " + org.smartregister.chw.gbv.util.Constants.TABLES.GBV_REGISTER + " p " +
                                 "              where p.is_closed is 0 ";
                 return NavigationDao.getQueryCount(sqlGbv);
+            case org.smartregister.chw.cecap.util.Constants.TABLES.CECAP_REGISTER:
+                String sqlCecap =
+                        "SELECT count(*) " +
+                                "   from " + org.smartregister.chw.cecap.util.Constants.TABLES.CECAP_REGISTER + " p " +
+                                "              where p.is_closed is 0 ";
+                return NavigationDao.getQueryCount(sqlCecap);
+            case org.smartregister.chw.asrh.util.Constants.TABLES.ASRH_REGISTER:
+                String sqlAsrh =
+                        "SELECT count(*) " +
+                                "   from " + org.smartregister.chw.asrh.util.Constants.TABLES.ASRH_REGISTER + " p " +
+                                "              where p.is_closed is 0 ";
+                return NavigationDao.getQueryCount(sqlAsrh);
             default:
                 return NavigationDao.getTableCount(tableName);
         }
