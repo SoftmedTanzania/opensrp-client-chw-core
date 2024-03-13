@@ -833,10 +833,10 @@
     <string name="vac_registration">VAC Registration</string>
 
     <!--   CECAP -->
-    <string name="reproductive_cancer_preventive_services_registration">Reproductive Cancer Preventive Services Registration</string>
+    <string name="reproductive_cancer_preventive_services_registration">Reproductive Cancer Preventive Services Enrollment</string>
 
     <!--   ASRH -->
-    <string name="asrh_registration">ASRH Registration</string>
+    <string name="asrh_registration">ASRH Enrollment</string>
 
 
 
