@@ -1293,6 +1293,10 @@ public class CoreConstants {
 
         public static final String GBV = "GBV/VAC";
 
+        public static final String CECAP = "CECAP";
+
+        public static final String ASRH = "ASRH";
+
     }
 
     public static final class KeyIndicatorsUtil {
