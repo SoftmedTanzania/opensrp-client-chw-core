@@ -611,7 +611,7 @@ public class CoreClientProcessor extends ClientProcessorForJava {
         String maleClientsReached = null;
         String healthEducationProvided = null;
 
-        if (mobilizationObs.size() > 0) {
+        if (!mobilizationObs.isEmpty()) {
             for (Obs obs : mobilizationObs) {
                 if (org.smartregister.chw.hivst.util.DBConstants.KEY.MOBILIZATION_DATE.equals(obs.getFormSubmissionField())) {
                     mobilizationDate = (String) obs.getValue();
