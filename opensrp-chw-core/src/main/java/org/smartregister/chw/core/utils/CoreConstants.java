@@ -985,6 +985,7 @@ public class CoreConstants {
         public static final String HIV_FOLLOW_UP_VISIT = "hiv-followup-rules.yml";
         public static final String PMTCT_FOLLOW_UP_VISIT = "pmtct-followup-rules.yml";
         public static final String HEI_FOLLOWUP_VISIT = "hei-followup-rules.yml";
+        public static final String ASRH_FOLLOWUP_VISIT = "asrh-followup-rules.yml";
     }
 
     public static class PROFILE_CHANGE_ACTION {
