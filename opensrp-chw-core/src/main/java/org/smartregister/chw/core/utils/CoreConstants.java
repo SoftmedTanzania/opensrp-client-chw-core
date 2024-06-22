@@ -963,7 +963,7 @@ public class CoreConstants {
 
         public static final String CECAP = "CECAP";
 
-        public static final String ASRH = "ASRH";
+        public static final String AYSRH = "AYSRH";
 
         public static final String SBC_MONTHLY_SOCIAL_MEDIA_REPORT = "SBC MONTHLY SOCIAL MEDIA REPORT";
     }
@@ -1296,7 +1296,7 @@ public class CoreConstants {
 
         public static final String CECAP = "CECAP";
 
-        public static final String ASRH = "ASRH";
+        public static final String AYSRH = "AYSRH";
 
     }
 

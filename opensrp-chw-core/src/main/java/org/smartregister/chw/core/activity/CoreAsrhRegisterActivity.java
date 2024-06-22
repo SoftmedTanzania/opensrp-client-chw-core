@@ -26,7 +26,7 @@ public class CoreAsrhRegisterActivity extends BaseAsrhRegisterActivity {
         super.onResumption();
         NavigationMenu menu = NavigationMenu.getInstance(this, null, null);
         if (menu != null) {
-            menu.getNavigationAdapter().setSelectedView(CoreConstants.DrawerMenu.ASRH);
+            menu.getNavigationAdapter().setSelectedView(CoreConstants.DrawerMenu.AYSRH);
         }
     }
 
