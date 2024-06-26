@@ -126,14 +126,15 @@ public class CoreAsrhProvider extends BaseAsrhRegisterProvider {
 
             lastVisit = HivDao.getLatestVisit(baseEntityID, Constants.EVENT_TYPE.ASRH_FOLLOW_UP_VISIT);
             Date lastVisitDate = lastVisit != null ? lastVisit.getDate() : null;
-            asrhFollowupRule = HomeVisitUtil.getHivVisitStatus(lastVisitDate, hivMemberObject.getHivRegistrationDate());
+            //TODO finalize this implementation
+            asrhFollowupRule = HomeVisitUtil.getAsrhVisitStatus(lastVisitDate, new Date());
             return null;
         }
 
         @Override
         protected void onPostExecute(Void param) {
-            if (hivFollowupRule != null && !hivFollowupRule.getButtonStatus().equalsIgnoreCase(CoreConstants.VISIT_STATE.EXPIRED)) {
-                updateDueColumn(context, viewHolder, hivFollowupRule);
+            if (asrhFollowupRule != null && !asrhFollowupRule.getButtonStatus().equalsIgnoreCase(CoreConstants.VISIT_STATE.EXPIRED)) {
+                updateDueColumn(context, viewHolder, asrhFollowupRule);
             }
         }
     }
