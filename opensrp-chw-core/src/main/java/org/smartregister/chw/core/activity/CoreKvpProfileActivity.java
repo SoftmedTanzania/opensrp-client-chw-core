@@ -13,16 +13,20 @@ import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.domain.Form;
 
 import org.json.JSONObject;
+import org.smartregister.chw.cecap.interactor.BaseCecapProfileInteractor;
 import org.smartregister.chw.core.R;
 import org.smartregister.chw.core.dataloader.CoreFamilyMemberDataLoader;
 import org.smartregister.chw.core.form_data.NativeFormsDataBinder;
 import org.smartregister.chw.core.model.CoreAllClientsMemberModel;
+import org.smartregister.chw.core.presenter.CoreCecapProfilePresenter;
+import org.smartregister.chw.core.presenter.CoreKvpProfilePresenter;
 import org.smartregister.chw.core.utils.CoreConstants;
 import org.smartregister.chw.core.utils.CoreJsonFormUtils;
 import org.smartregister.chw.core.utils.UpdateDetailsUtil;
 import org.smartregister.chw.hiv.domain.HivMemberObject;
 import org.smartregister.chw.kvp.activity.BaseKvpProfileActivity;
 import org.smartregister.chw.kvp.domain.MemberObject;
+import org.smartregister.chw.kvp.interactor.BaseKvpProfileInteractor;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.family.contract.FamilyProfileContract;
@@ -65,6 +69,14 @@ public abstract class CoreKvpProfileActivity extends BaseKvpProfileActivity {
         menu.findItem(R.id.action_location_info).setVisible(UpdateDetailsUtil.isIndependentClient(memberObject.getBaseEntityId()));
         return true;
     }
+
+    @Override
+    protected void initializePresenter() {
+        super.initializePresenter();
+        profilePresenter = new CoreKvpProfilePresenter(this, new BaseKvpProfileInteractor(), memberObject);
+        profilePresenter.refreshProfileBottom();
+    }
+
 
 
     @Override
