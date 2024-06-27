@@ -13,21 +13,21 @@ import org.smartregister.chw.anc.util.DBConstants;
 import org.smartregister.chw.asrh.dao.AsrhDao;
 import org.smartregister.chw.asrh.domain.MemberObject;
 import org.smartregister.chw.asrh.provider.BaseAsrhRegisterProvider;
-import org.smartregister.chw.asrh.util.Constants;
 import org.smartregister.chw.core.R;
 import org.smartregister.chw.core.rule.AsrhFollowupRule;
-import org.smartregister.chw.core.rule.HivFollowupRule;
 import org.smartregister.chw.core.utils.CoreConstants;
 import org.smartregister.chw.core.utils.FpUtil;
 import org.smartregister.chw.core.utils.HomeVisitUtil;
-import org.smartregister.chw.hiv.dao.HivDao;
-import org.smartregister.chw.hiv.domain.HivMemberObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.util.Utils;
 import org.smartregister.view.contract.SmartRegisterClient;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Set;
+
+import timber.log.Timber;
 
 public class CoreAsrhProvider extends BaseAsrhRegisterProvider {
 
@@ -124,10 +124,15 @@ public class CoreAsrhProvider extends BaseAsrhRegisterProvider {
             String baseEntityID = Utils.getValue(pc.getColumnmaps(), DBConstants.KEY.BASE_ENTITY_ID, false);
             MemberObject memberObject = AsrhDao.getMember(baseEntityID);
 
-            lastVisit = HivDao.getLatestVisit(baseEntityID, Constants.EVENT_TYPE.ASRH_FOLLOW_UP_VISIT);
-            Date lastVisitDate = lastVisit != null ? lastVisit.getDate() : null;
+            Date nextAppointmentDate = null;
+            try {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+                nextAppointmentDate = simpleDateFormat.parse(memberObject.getNextAppointmentDate());
+            } catch (Exception e) {
+                Timber.e(e);
+            }
             //TODO finalize this implementation
-            asrhFollowupRule = HomeVisitUtil.getAsrhVisitStatus(lastVisitDate, new Date());
+            asrhFollowupRule = HomeVisitUtil.getAsrhVisitStatus(nextAppointmentDate);
             return null;
         }
 

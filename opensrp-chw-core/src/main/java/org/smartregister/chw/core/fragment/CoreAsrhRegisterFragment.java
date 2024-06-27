@@ -17,20 +17,32 @@ import org.smartregister.chw.asrh.presenter.BaseAsrhRegisterFragmentPresenter;
 import org.smartregister.chw.core.R;
 import org.smartregister.chw.core.activity.CoreAsrhMemberProfileActivity;
 import org.smartregister.chw.core.custom_views.NavigationMenu;
+import org.smartregister.chw.core.provider.CoreAsrhProvider;
+import org.smartregister.chw.core.provider.CoreFpProvider;
 import org.smartregister.chw.core.utils.CoreConstants;
 import org.smartregister.chw.core.utils.QueryBuilder;
 import org.smartregister.chw.core.utils.Utils;
 import org.smartregister.commonregistry.CommonRepository;
+import org.smartregister.cursoradapter.RecyclerViewPaginatedAdapter;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.view.customcontrols.CustomFontTextView;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Set;
 
 import timber.log.Timber;
 
 public class CoreAsrhRegisterFragment extends BaseAsrhRegisterFragment {
     private View view;
+
+    @Override
+    public void initializeAdapter(Set<org.smartregister.configurableviews.model.View> visibleColumns) {
+        CoreAsrhProvider coreAsrhProvider = new CoreAsrhProvider(getActivity(), visibleColumns, registerActionHandler, paginationViewHandler);
+        clientAdapter = new RecyclerViewPaginatedAdapter(null, coreAsrhProvider, context().commonrepository(this.tablename));
+        clientAdapter.setCurrentlimit(20);
+        clientsView.setAdapter(clientAdapter);
+    }
 
     @Override
     public void setupViews(View view) {

@@ -79,8 +79,8 @@ public class HomeVisitUtil {
         return heiFollowupRule;
     }
 
-    public static AsrhFollowupRule getAsrhVisitStatus(Date lastVisitDate, Date nextAppointmentDate) {
-        AsrhFollowupRule asrhFollowupRule = new AsrhFollowupRule(nextAppointmentDate, lastVisitDate);
+    public static AsrhFollowupRule getAsrhVisitStatus(Date nextAppointmentDate) {
+        AsrhFollowupRule asrhFollowupRule = new AsrhFollowupRule(nextAppointmentDate);
         CoreChwApplication.getInstance().getRulesEngineHelper().getAsrhRule(asrhFollowupRule, CoreConstants.RULE_FILE.ASRH_FOLLOWUP_VISIT);
         return asrhFollowupRule;
     }

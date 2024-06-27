@@ -12,17 +12,15 @@ import java.util.Locale;
 public class AsrhFollowupRule implements ICommonRule {
     public static final String RULE_KEY = "asrhFollowupRule";
     private String visitID;
-    private DateTime hivDate;
+    private final DateTime nextAppointmentDate;
     private DateTime dueDate;
     private DateTime overDueDate;
-    private DateTime lastVisitDate;
     private DateTime expiryDate;
     private int daysDifference;
 
-    public AsrhFollowupRule(Date nextAppoinmentDate, Date lastVisitDate) {
+    public AsrhFollowupRule(Date appointmentDate) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        this.hivDate = hivDate != null ? new DateTime(sdf.format(hivDate)) : null;
-        this.lastVisitDate = lastVisitDate == null ? null : new DateTime(lastVisitDate);
+        this.nextAppointmentDate = appointmentDate != null ? new DateTime(sdf.format(appointmentDate)) : null;
     }
 
     public String getVisitID() {
@@ -38,14 +36,10 @@ public class AsrhFollowupRule implements ICommonRule {
     }
 
     public boolean isValid(int dueDay, int overdueDate, int expiry) {
-        if (lastVisitDate != null) {
-            this.dueDate = lastVisitDate.plusDays(dueDay);
-            this.overDueDate = lastVisitDate.plusDays(overdueDate);
-            this.expiryDate = lastVisitDate.plusDays(expiry);
-        } else {
-            this.dueDate = hivDate.plusDays(dueDay);
-            this.overDueDate = hivDate.plusDays(overdueDate);
-            this.expiryDate = hivDate.plusDays(expiry);
+        if (nextAppointmentDate != null) {
+            this.dueDate = nextAppointmentDate.plusDays(dueDay);
+            this.overDueDate = nextAppointmentDate.plusDays(overdueDate);
+            this.expiryDate = nextAppointmentDate.plusDays(expiry);
         }
 
         daysDifference = Days.daysBetween(new DateTime(), new DateTime(dueDate)).getDays();
@@ -72,15 +66,12 @@ public class AsrhFollowupRule implements ICommonRule {
     @Override
     public String getButtonStatus() {
         DateTime currentDate = new DateTime(new LocalDate().toDate());
-        DateTime lastVisit = lastVisitDate;
 
         if (currentDate.isBefore(expiryDate)) {
             if ((currentDate.isAfter(overDueDate) || currentDate.isEqual(overDueDate)))
                 return CoreConstants.VISIT_STATE.OVERDUE;
             if ((currentDate.isAfter(dueDate) || currentDate.isEqual(dueDate)) && currentDate.isBefore(overDueDate))
                 return CoreConstants.VISIT_STATE.DUE;
-            if (lastVisit != null && currentDate.isEqual(lastVisit))
-                return CoreConstants.VISIT_STATE.VISIT_DONE;
             return CoreConstants.VISIT_STATE.NOT_DUE_YET;
 
         }
