@@ -621,6 +621,7 @@
     <string name="daily_tally_">Muoanisho wa siku > %1$s</string>
     <string name="started">Imeanza</string>
     <string name="send_report_warning">Tuma taarifa ya %1$s?\nTarehe: %2$s\nMJA: %3$s</string>
+    <string name="reports_activity">Repoti</string>
 
     <!--ba stockUsageModel inv reporting-->
     <string name="stock_usage_report">Ripoti ya Vifaa Tiba na Kinga</string>
