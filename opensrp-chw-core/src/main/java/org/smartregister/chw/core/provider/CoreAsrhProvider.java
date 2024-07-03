@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.Button;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.smartregister.chw.anc.domain.Visit;
@@ -50,12 +51,11 @@ public class CoreAsrhProvider extends BaseAsrhRegisterProvider {
         Utils.startAsyncTask(new UpdateAsyncTask(context, viewHolder, pc), null);
     }
 
-    private void updateDueColumn(Context context, RegisterViewHolder viewHolder, AsrhFollowupRule asrhFollowupRule) {
+    private void updateDueColumn(Context context, RegisterViewHolder viewHolder, AsrhFollowupRule asrhFollowupRule, String nextAppointmentDate) {
         if (asrhFollowupRule.getDueDate() != null) {
             viewHolder.dueButton.setVisibility(View.VISIBLE);
             if (asrhFollowupRule.getButtonStatus().equalsIgnoreCase(CoreConstants.VISIT_STATE.NOT_DUE_YET)) {
                 setVisitButtonNextDueStatus(context, FpUtil.sdf.format(asrhFollowupRule.getDueDate()), viewHolder.dueButton);
-                viewHolder.dueButton.setVisibility(View.GONE);
             }
             if (asrhFollowupRule.getButtonStatus().equalsIgnoreCase(CoreConstants.VISIT_STATE.DUE)) {
                 setVisitButtonDueStatus(context, String.valueOf(Days.daysBetween(new DateTime(asrhFollowupRule.getDueDate()), new DateTime()).getDays()), viewHolder.dueButton);
@@ -64,6 +64,9 @@ public class CoreAsrhProvider extends BaseAsrhRegisterProvider {
             } else if (asrhFollowupRule.getButtonStatus().equalsIgnoreCase(CoreConstants.VISIT_STATE.VISIT_DONE)) {
                 setVisitDone(context, viewHolder.dueButton);
             }
+        } else if (StringUtils.isNotBlank(nextAppointmentDate)) {
+            viewHolder.dueButton.setVisibility(View.VISIBLE);
+            setVisitButtonNextDueStatus(context, nextAppointmentDate, viewHolder.dueButton);
         }
     }
 
@@ -112,6 +115,7 @@ public class CoreAsrhProvider extends BaseAsrhRegisterProvider {
         private final Context context;
         private AsrhFollowupRule asrhFollowupRule;
         private Visit lastVisit;
+        private MemberObject memberObject;
 
         private UpdateAsyncTask(Context context, RegisterViewHolder viewHolder, CommonPersonObjectClient pc) {
             this.context = context;
@@ -122,7 +126,7 @@ public class CoreAsrhProvider extends BaseAsrhRegisterProvider {
         @Override
         protected Void doInBackground(Void... params) {
             String baseEntityID = Utils.getValue(pc.getColumnmaps(), DBConstants.KEY.BASE_ENTITY_ID, false);
-            MemberObject memberObject = AsrhDao.getMember(baseEntityID);
+            memberObject = AsrhDao.getMember(baseEntityID);
 
             Date nextAppointmentDate = null;
             try {
@@ -138,8 +142,8 @@ public class CoreAsrhProvider extends BaseAsrhRegisterProvider {
 
         @Override
         protected void onPostExecute(Void param) {
-            if (asrhFollowupRule != null && !asrhFollowupRule.getButtonStatus().equalsIgnoreCase(CoreConstants.VISIT_STATE.EXPIRED)) {
-                updateDueColumn(context, viewHolder, asrhFollowupRule);
+            if (asrhFollowupRule != null && !asrhFollowupRule.getButtonStatus().equalsIgnoreCase(CoreConstants.VISIT_STATE.EXPIRED) && memberObject != null) {
+                updateDueColumn(context, viewHolder, asrhFollowupRule, memberObject.getNextAppointmentDate());
             }
         }
     }
