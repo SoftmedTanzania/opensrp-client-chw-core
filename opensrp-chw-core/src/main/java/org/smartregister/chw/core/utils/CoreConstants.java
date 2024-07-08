@@ -1267,7 +1267,7 @@ public class CoreConstants {
 
         public static final String ICCM_REFERRAL = "ICCM Services";
 
-        public static final String CECAP_REFERRAL = "CECAP Services";
+        public static final String CECAP_REFERRAL = "Reproductive Cancer Services";
     }
 
     public static final class REGISTER_TYPE {
@@ -1294,7 +1294,7 @@ public class CoreConstants {
 
         public static final String GBV = "GBV/VAC";
 
-        public static final String CECAP = "CECAP";
+        public static final String CECAP = "Reproductive Cancers";
 
         public static final String AYSRH = "AYSRH";
 
