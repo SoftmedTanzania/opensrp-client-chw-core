@@ -298,6 +298,10 @@ public class CoreConstants {
         private static final String PMTCT_REFERRAL_FORM = "referrals/pmtct_referral_form";
         public static final String PARTNER_TESTING = "anc_partner_testing";
 
+        private static final String FEMALE_AYSRH_FRIENDLY_SERVICES_REFERRAL_FORM = "referrals/female_aysrh_referral_form";
+
+        private static final String MALE_AYSRH_FRIENDLY_SERVICES_REFERRAL_FORM = "referrals/male_aysrh_referral_form";
+
         public static AssetManager assetManager;
         public static Locale locale;
 
@@ -602,6 +606,14 @@ public class CoreConstants {
 
         public static String getSTIServicesReferralForm() {
             return STI_REFERRAL_FORM;
+        }
+
+        public static String getMaleAysrhFriendlyServicesReferralForm(){
+            return MALE_AYSRH_FRIENDLY_SERVICES_REFERRAL_FORM;
+        }
+
+        public static String getFemaleAysrhFriendlyServicesReferralForm(){
+            return FEMALE_AYSRH_FRIENDLY_SERVICES_REFERRAL_FORM;
         }
 
         public static class CHILD_HOME_VISIT {
@@ -1268,6 +1280,8 @@ public class CoreConstants {
         public static final String ICCM_REFERRAL = "ICCM Services";
 
         public static final String CECAP_REFERRAL = "Reproductive Cancer Services";
+
+        public static final String AYSRH_FRIENDLY_SERVICES = "AYSRH Friendly Services";
     }
 
     public static final class REGISTER_TYPE {
