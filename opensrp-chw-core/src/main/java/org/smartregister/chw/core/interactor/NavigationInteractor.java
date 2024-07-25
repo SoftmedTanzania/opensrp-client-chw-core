@@ -585,7 +585,8 @@ public class NavigationInteractor implements NavigationContract.Interactor {
                 String sqlAsrh =
                         "SELECT count(*) " +
                                 "   from " + org.smartregister.chw.asrh.util.Constants.TABLES.ASRH_REGISTER + " p " +
-                                "              where p.is_closed is 0 ";
+                                "   inner join ec_family_member ef on ef.base_entity_id on p.base_entity_id " +
+                                "   where p.is_closed is 0 ";
                 return NavigationDao.getQueryCount(sqlAsrh);
             default:
                 return NavigationDao.getTableCount(tableName);
