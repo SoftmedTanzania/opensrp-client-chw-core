@@ -531,7 +531,7 @@ public class NavigationInteractor implements NavigationContract.Interactor {
                 String sqlPrEP =
                         "SELECT count(*) " +
                                 "   from " + org.smartregister.chw.kvp.util.Constants.TABLES.PrEP_REGISTER + " p " +
-                                "              where p.is_closed is 0 ";
+                                "              where p.is_closed is 0 AND p.agreed_to_use_prep = 'yes' ";
                 return NavigationDao.getQueryCount(sqlPrEP);
             case org.smartregister.chw.cdp.util.Constants.TABLES.CDP_ORDERS:
                 String userLocationTag = getAllSharedPreferences().fetchUserLocationTag();
